@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,7 +10,8 @@ public class NamesList {
         names = new ArrayList<>();
     }
 
-    public void startUserInterface() {
+    public void startUserInterface() throws IOException {
+
         System.out.println("""
                 Welcome to the NamesList - enterprise edition.
                 ----------------------------------------------
@@ -35,7 +37,7 @@ public class NamesList {
     private void showMenu() {
         System.out.println("""
                 1) Display list of names
-                2) Load list of names (not implemented)
+                2) Load list of names 
                 3) Save list of names (not implemented)
                 4) Enter names
                 0) Exit
@@ -60,14 +62,31 @@ public class NamesList {
         System.out.println("Done");
     }
 
-    private void saveListOfNames() {
-        // TODO: Implement save of the names list to a file
-        System.out.println("NOT IMPLEMENTED");
+    private void saveListOfNames() throws IOException {
+        FileWriter writer = new FileWriter("ListOfNames.txt");
+        int len = names.size();
+
+        for (int i = 0; i < len; i++) {
+            writer.write(names.get(i) + "\n");
+        }
+        writer.close();
     }
 
-    private void loadListOfNames() {
-        // TODO: Implement load of the names list from a file
-        System.out.println("NOT IMPLEMENTED");
+    private void loadListOfNames(){
+        File file = new File("names.txt");
+
+        Scanner sc = null;
+        try {
+            sc = new Scanner(file);
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                names.add(line);
+                System.out.println(line);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("file not found");
+        }
     }
 
     private void displayListOfNames() {
@@ -92,7 +111,7 @@ public class NamesList {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         NamesList app = new NamesList();
         app.startUserInterface();
     }
